@@ -1,337 +1,498 @@
 /* ══════════════════════════════════════════════
-   1. PARTICLE CANVAS
+   OFFICE OF CONGRESSMAN ROY M. GONZALES
+   LONE DISTRICT OF SANTA ROSA, LAGUNA
+   INTERACTION ENGINE (Emil Kowalski Craft & Physics)
 ══════════════════════════════════════════════ */
+
 (function () {
-  var canvas = document.getElementById('particleCanvas');
-  var ctx    = canvas.getContext('2d');
-  var W, H;
-  var mouse  = { x: -9999, y: -9999 };
+  'use strict';
 
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+  /* ──────────────────────────────────────────────
+     1. TOAST NOTIFICATION SYSTEM (SONNER-STYLE)
+  ────────────────────────────────────────────── */
+  var toastContainer = document.getElementById('toastContainer');
+
+  function showToast(message, type) {
+    if (!toastContainer) return;
+    
+    var toast = document.createElement('div');
+    toast.className = 'sonner-toast';
+    toast.setAttribute('role', 'status');
+
+    var checkIcon = '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+    var infoIcon = '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+
+    var iconHtml = (type === 'info') ? infoIcon : checkIcon;
+    toast.innerHTML = iconHtml + '<span>' + message + '</span>';
+
+    toastContainer.appendChild(toast);
+
+    // Auto-dismiss after 2.8s with spring exit
+    setTimeout(function () {
+      toast.classList.add('toast-dismissing');
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 220);
+    }, 2800);
   }
-  resize();
-  window.addEventListener('resize', resize);
-  document.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; });
-  document.addEventListener('mouseleave', function ()  { mouse.x = -9999;     mouse.y = -9999; });
 
-  function Particle() { this.reset(); }
-  Particle.prototype.reset = function () {
-    this.x  = Math.random() * W;
-    this.y  = Math.random() * H;
-    this.vx = (Math.random() - 0.5) * 0.36;
-    this.vy = (Math.random() - 0.5) * 0.36;
-    this.r  = Math.random() * 2.4 + 0.8;
-    this.a  = Math.random() * 0.22 + 0.07;
-  };
-  Particle.prototype.update = function () {
-    var dx = this.x - mouse.x;
-    var dy = this.y - mouse.y;
-    var d  = Math.sqrt(dx * dx + dy * dy);
-    if (d < 110 && d > 0) {
-      var force = (110 - d) / 110;
-      this.vx  += (dx / d) * force * 0.22;
-      this.vy  += (dy / d) * force * 0.22;
+  /* ──────────────────────────────────────────────
+     2. SLIDING PILL TAB NAVIGATION (EMIL KOWALSKI)
+  ────────────────────────────────────────────── */
+  var navTrack = document.getElementById('navTrack');
+  var navActivePill = document.getElementById('navActivePill');
+  var tabButtons = document.querySelectorAll('.nav-tab-btn');
+  var viewPanels = document.querySelectorAll('.view-panel');
+
+  function updatePillPosition(activeBtn) {
+    if (!activeBtn || !navActivePill) return;
+    var left = activeBtn.offsetLeft;
+    var width = activeBtn.offsetWidth;
+    var scale = width / 100;
+    navActivePill.style.transform = 'translate3d(' + left + 'px, 0, 0) scaleX(' + scale + ')';
+  }
+
+  function switchView(targetPageId) {
+    var currentPanel = document.querySelector('.view-panel.active');
+    var targetPanel = document.getElementById('page-' + targetPageId);
+    if (!targetPanel || currentPanel === targetPanel) return;
+
+    var targetBtn = document.querySelector('.nav-tab-btn[data-page="' + targetPageId + '"]');
+
+    // Update active tab button state
+    tabButtons.forEach(function (btn) {
+      btn.classList.remove('active');
+      btn.removeAttribute('aria-current');
+    });
+
+    if (targetBtn) {
+      targetBtn.classList.add('active');
+      targetBtn.setAttribute('aria-current', 'page');
+      updatePillPosition(targetBtn);
     }
-    this.vx *= 0.975;
-    this.vy *= 0.975;
-    this.x  += this.vx;
-    this.y  += this.vy;
-    if (this.x < 0) this.x = W;
-    if (this.x > W) this.x = 0;
-    if (this.y < 0) this.y = H;
-    if (this.y > H) this.y = 0;
-  };
-  Particle.prototype.draw = function () {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(200,16,46,' + this.a + ')';
-    ctx.fill();
-  };
 
-  var COUNT = 55;
-  var LINK  = 125;
-  var pts   = [];
-  for (var i = 0; i < COUNT; i++) pts.push(new Particle());
+    // Smooth view transition
+    if (currentPanel) {
+      currentPanel.classList.remove('visible');
+      setTimeout(function () {
+        currentPanel.classList.remove('active');
+        targetPanel.classList.add('active');
 
-  (function loop() {
-    ctx.clearRect(0, 0, W, H);
-    for (var i = 0; i < pts.length; i++) {
-      pts[i].update();
-      pts[i].draw();
-      for (var j = i + 1; j < pts.length; j++) {
-        var dx = pts[i].x - pts[j].x;
-        var dy = pts[i].y - pts[j].y;
-        var d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < LINK) {
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = 'rgba(200,16,46,' + ((1 - d / LINK) * 0.11) + ')';
-          ctx.lineWidth   = 0.8;
-          ctx.stroke();
-        }
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            targetPanel.classList.add('visible');
+            if (targetPageId === 'home') {
+              animateAllCounters();
+            }
+          });
+        });
+      }, 180);
+    } else {
+      targetPanel.classList.add('active', 'visible');
+    }
+  }
+
+  // Attach click listener to tab buttons
+  tabButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pageId = this.getAttribute('data-page');
+      switchView(pageId);
+    });
+  });
+
+  // Support internal buttons switching tabs (e.g. "View District Services")
+  document.querySelectorAll('[data-target-page], [data-nav-to]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      var targetId = this.getAttribute('data-target-page') || this.getAttribute('data-nav-to');
+      if (targetId) {
+        switchView(targetId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Initial pill positioning
+  window.addEventListener('load', function () {
+    var initialActive = document.querySelector('.nav-tab-btn.active');
+    if (initialActive) updatePillPosition(initialActive);
+  });
+
+  window.addEventListener('resize', function () {
+    var activeBtn = document.querySelector('.nav-tab-btn.active');
+    if (activeBtn) updatePillPosition(activeBtn);
+  });
+
+  /* ──────────────────────────────────────────────
+     3. EXPONENTIAL EASED TABULAR COUNTERS
+  ────────────────────────────────────────────── */
+  var countersDone = false;
+
+  function easeOutExpo(x) {
+    return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+  }
+
+  function animateCounter(el, target, durationMs, suffix) {
+    if (!el) return;
+    suffix = suffix || '';
+    var start = null;
+
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      var elapsed = timestamp - start;
+      var progress = Math.min(elapsed / durationMs, 1);
+      var eased = easeOutExpo(progress);
+      var currentVal = Math.floor(eased * target);
+
+      el.textContent = currentVal.toLocaleString() + suffix;
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = target.toLocaleString() + suffix;
       }
     }
-    requestAnimationFrame(loop);
-  })();
-})();
-
-/* ══════════════════════════════════════════════
-   2. DRAWER TOGGLE LOGIC
-══════════════════════════════════════════════ */
-var drawer = document.getElementById('scholarshipDrawer');
-var overlay = document.getElementById('drawerOverlay');
-var closeBtn = document.getElementById('closeDrawer');
-var openBtns = document.querySelectorAll('.open-drawer-btn');
-
-function openDrawer() {
-  drawer.classList.add('active');
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden'; // Prevent background scrolling
-  if (applicants && applicants.length > 0) {
-    animateCount(totalCountEl, applicants.length, 1200);
+    requestAnimationFrame(step);
   }
-}
 
-function closeDrawer() {
-  drawer.classList.remove('active');
-  overlay.classList.remove('active');
-  document.body.style.overflow = ''; // Restore scrolling
-}
+  function animateAllCounters() {
+    if (countersDone) return;
+    var statEls = document.querySelectorAll('.stat-number');
+    statEls.forEach(function (el) {
+      var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+      var suffix = el.getAttribute('data-suffix') || '';
+      animateCounter(el, target, 1800, suffix);
+    });
+    countersDone = true;
+  }
 
-openBtns.forEach(function(btn) {
-  btn.addEventListener('click', openDrawer);
-});
-closeBtn.addEventListener('click', closeDrawer);
-overlay.addEventListener('click', closeDrawer);
+  // Trigger counters with intersection observer
+  var kpiLedger = document.querySelector('.kpi-ledger');
+  if (kpiLedger && 'IntersectionObserver' in window) {
+    var counterObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateAllCounters();
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    counterObserver.observe(kpiLedger);
+  } else {
+    setTimeout(animateAllCounters, 350);
+  }
 
-/* ══════════════════════════════════════════════
-   3. DATA LOADING + ANIMATED COUNTER
-══════════════════════════════════════════════ */
-var applicants     = [];
-var resultsEl      = document.getElementById('results');
-var inputEl        = document.getElementById('searchInput');
-var clearBtn       = document.getElementById('clearButton');
-var resultsCountEl = document.getElementById('resultsCount');
-var totalCountEl   = document.getElementById('totalCount');
+  /* ──────────────────────────────────────────────
+     4. VAUL-INSPIRED COMMAND DRAWER & SEARCH ENGINE
+  ────────────────────────────────────────────── */
+  var drawer = document.getElementById('scholarshipDrawer');
+  var overlay = document.getElementById('drawerOverlay');
+  var closeBtn = document.getElementById('closeDrawer');
+  var openBtns = document.querySelectorAll('.open-drawer-btn');
+  var searchInput = document.getElementById('searchInput');
+  var clearBtn = document.getElementById('clearButton');
+  var resultsEl = document.getElementById('results');
+  var resultsCountEl = document.getElementById('resultsCount');
+  var totalCountEl = document.getElementById('totalCount');
 
-function animateCount(el, target, ms, suffix) {
-  if (!el) return;
-  suffix = suffix || '';
-  var start = null;
-  if (el._animId) cancelAnimationFrame(el._animId);
+  var applicants = [];
+  var lastFocusedElement = null;
 
-  function step(timestamp) {
-    if (!start) start = timestamp;
-    var progress = Math.min((timestamp - start) / ms, 1);
-    // Linear: steady, constant speed ticking from start to finish
-    var val = Math.floor(progress * target);
-    el.textContent = val.toLocaleString() + suffix;
-    if (progress < 1) {
-      el._animId = requestAnimationFrame(step);
-    } else {
-      el.textContent = target.toLocaleString() + suffix;
-      el._animId = null;
+  function openDrawer() {
+    if (!drawer) return;
+    lastFocusedElement = document.activeElement;
+    drawer.classList.add('active');
+    if (overlay) overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Auto-focus search input with smooth delay
+    setTimeout(function () {
+      if (searchInput) searchInput.focus();
+    }, 150);
+
+    if (applicants.length > 0 && totalCountEl && totalCountEl.textContent === '0') {
+      animateCounter(totalCountEl, applicants.length, 1200);
     }
   }
-  el._animId = requestAnimationFrame(step);
-}
 
-var homeStatsAnimated = false;
-function animateHomeStats() {
-  if (homeStatsAnimated) return;
-  var statEls = document.querySelectorAll('.stat-number');
-  if (!statEls.length) return;
-  homeStatsAnimated = true;
-  statEls.forEach(function (el) {
-    var target = parseInt(el.getAttribute('data-target'), 10) || 0;
-    var suffix = el.getAttribute('data-suffix') || '';
-    animateCount(el, target, 1600, suffix);
-  });
-}
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
 
-fetch('applicants.json')
-  .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
-  .then(function (data) {
-    applicants = Array.isArray(data) ? data : [];
-    animateCount(totalCountEl, applicants.length, 1400);
-    showEmptyState();
-  })
-  .catch(function () {
-    totalCountEl.textContent = '0';
-    resultsEl.innerHTML = '<div class="no-results">We could not load the applicant records. Please try again later.</div>';
-    resultsCountEl.textContent = '0 matches';
-  });
-
-function formatName(p) {
-  var first  = (p.first_name  || '').trim();
-  var middle = (p.middle_name || '').trim();
-  var last   = (p.last_name   || '').trim();
-  var mi = middle
-    ? middle.split(/\s+/).filter(Boolean).map(function (s) { return s.charAt(0).toUpperCase() + '.'; }).join(' ')
-    : '';
-  return last.toUpperCase() + ', ' + first + (mi ? ' ' + mi : '');
-}
-
-function showEmptyState() {
-  resultsEl.innerHTML = '<div class="empty-state">Type at least 4 characters to search for an applicant.</div>';
-  resultsCountEl.textContent = '0 matches';
-}
-
-function renderResults(list) {
-  if (!list.length) {
-    resultsEl.innerHTML = '<div class="no-results">No match found. Please check your spelling or try a different keyword.</div>';
-    resultsCountEl.textContent = '0 matches';
-    return;
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      lastFocusedElement.focus();
+    }
   }
-  resultsEl.innerHTML = list.slice(0, 50).map(function (person, i) {
-    return '<div class="person-card" style="animation-delay:' + (i * 0.045) + 's">' +
-      '<p class="person-name">' + formatName(person) + '</p>' +
-      '<span class="badge">Qualified</span>' +
-    '</div>';
-  }).join('');
-  attachCardTilt();
-  resultsCountEl.textContent = list.length === 1 ? '1 match' : list.length + ' matches';
-}
 
-function attachCardTilt() {
-  document.querySelectorAll('.person-card').forEach(function (card) {
-    card.addEventListener('mousemove', function (e) {
-      var r = card.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width  - 0.5;
-      var y = (e.clientY - r.top)  / r.height - 0.5;
-      card.style.transform  = 'perspective(700px) rotateX(' + (-y * 5) + 'deg) rotateY(' + (x * 5) + 'deg) translateY(-3px)';
-      card.style.boxShadow  = '0 8px 20px rgba(31,36,48,0.08), 0 0 0 1px rgba(200,16,46,0.13)';
-      card.style.borderColor = 'rgba(200,16,46,0.18)';
+  openBtns.forEach(function (btn) {
+    btn.addEventListener('click', openDrawer);
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+  if (overlay) overlay.addEventListener('click', closeDrawer);
+
+  // Global Keyboard Shortcuts (/ or Ctrl+K to open, Esc to close)
+  document.addEventListener('keydown', function (e) {
+    // If Esc pressed and drawer is open
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('active')) {
+      e.preventDefault();
+      closeDrawer();
+      return;
+    }
+
+    // If '/' or 'Ctrl+K' / 'Cmd+K' pressed to search
+    var isTypingInField = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+    if (!isTypingInField && (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'))) {
+      e.preventDefault();
+      openDrawer();
+    }
+  });
+
+  /* ──────────────────────────────────────────────
+     5. APPLICANTS DATA FETCHING & FORMATTING
+  ────────────────────────────────────────────── */
+  function formatName(p) {
+    var last = (p.last_name || '').trim().toUpperCase();
+    var first = (p.first_name || '').trim().toUpperCase();
+    var middle = (p.middle_name || '').trim();
+    var mi = middle
+      ? middle.split(/\s+/).filter(Boolean).map(function (s) { return s.charAt(0).toUpperCase() + '.'; }).join(' ')
+      : '';
+    return last + ', ' + first + (mi ? ' ' + mi : '');
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (m) {
+      switch (m) {
+        case '&': return '&amp;';
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '"': return '&quot;';
+        case "'": return '&#039;';
+        default: return m;
+      }
     });
-    card.addEventListener('mouseleave', function () {
-      card.style.transform  = '';
-      card.style.boxShadow  = '';
-      card.style.borderColor = '';
+  }
+
+  function highlightMatch(text, query) {
+    if (!query) return escapeHtml(text);
+    var reg = new RegExp('(' + query.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+    return escapeHtml(text).replace(reg, '<mark class="highlight-match">$1</mark>');
+  }
+
+  function showInitialEmptyState() {
+    if (!resultsEl) return;
+    resultsEl.innerHTML = 
+      '<div class="empty-state-card">' +
+        '<svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+        '<h4 class="empty-state-title">Search Qualified Masterlist</h4>' +
+        '<p class="empty-state-text">Enter at least 4 characters of your Last Name, First Name, or exact Student Number to verify qualification.</p>' +
+      '</div>';
+    if (resultsCountEl) resultsCountEl.textContent = 'Ready to search';
+  }
+
+  function renderApplicantList(list, query) {
+    if (!resultsEl) return;
+
+    if (!list.length) {
+      resultsEl.innerHTML = 
+        '<div class="no-results-card">' +
+          '<svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+          '<h4 class="empty-state-title">No Endorsed Record Found</h4>' +
+          '<p class="empty-state-text">No matching records found for "<strong>' + escapeHtml(query) + '</strong>". Please check your spelling or contact the District Congressional Office if your application was recently submitted.</p>' +
+        '</div>';
+      if (resultsCountEl) resultsCountEl.textContent = '0 matches found';
+      return;
+    }
+
+    var displayList = list.slice(0, 60);
+    var html = displayList.map(function (person, i) {
+      var fullName = formatName(person);
+      var highlightedName = highlightMatch(fullName, query);
+
+      return '<article class="applicant-card" style="animation-delay:' + (i * 0.025) + 's">' +
+        '<div class="applicant-info">' +
+          '<h5 class="applicant-name">' + highlightedName + '</h5>' +
+          '<div class="applicant-meta-row">' +
+            '<span class="applicant-status-tag"><span class="applicant-status-dot" aria-hidden="true"></span>CHED TDP Endorsed Scholar • AY 2026–2027</span>' +
+          '</div>' +
+        '</div>' +
+        '<span class="badge-qualified">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '<span>Qualified</span>' +
+        '</span>' +
+      '</article>';
+    }).join('');
+
+    resultsEl.innerHTML = html;
+
+    if (resultsCountEl) {
+      var totalMatches = list.length;
+      resultsCountEl.textContent = totalMatches === 1 ? '1 verified match' : totalMatches.toLocaleString() + ' verified matches';
+    }
+  }
+
+  // Load applicants.json data
+  fetch('applicants.json')
+    .then(function (res) {
+      if (!res.ok) throw new Error('Data fetch failed');
+      return res.json();
+    })
+    .then(function (data) {
+      applicants = Array.isArray(data) ? data : [];
+      if (totalCountEl) {
+        animateCounter(totalCountEl, applicants.length, 1200);
+      }
+      showInitialEmptyState();
+    })
+    .catch(function () {
+      if (resultsEl) {
+        resultsEl.innerHTML = '<div class="no-results-card"><p>Unable to connect to local masterlist. If running locally, please open via a local server (e.g. python -m http.server).</p></div>';
+      }
     });
-  });
-}
 
-inputEl.addEventListener('input', function (e) {
-  var query = e.target.value.trim();
-  clearBtn.hidden = !query;
+  // Debounced search logic
+  var searchTimeout = null;
 
-  if (!query || query.length < 4) { showEmptyState(); return; }
+  function performSearch(query) {
+    if (!query || query.length < 4) {
+      showInitialEmptyState();
+      return;
+    }
 
-  var norm  = query.toLowerCase();
-  var exact = applicants.filter(function (p) {
-    return (p.student_num || '').trim().toLowerCase() === norm;
-  });
-  var filtered = exact.length ? exact : applicants.filter(function (p) {
-    var name = ((p.first_name || '') + ' ' + (p.middle_name || '') + ' ' + (p.last_name || '')).toLowerCase();
-    return name.includes(norm);
-  });
-  renderResults(filtered);
-});
+    var norm = query.toLowerCase().trim();
 
-clearBtn.addEventListener('click', function () {
-  inputEl.value   = '';
-  clearBtn.hidden = true;
-  showEmptyState();
-  inputEl.focus();
-});
+    // Exact student ID check
+    var exactIdMatches = applicants.filter(function (p) {
+      return (p.student_num || '').toLowerCase().trim() === norm;
+    });
 
-/* ══════════════════════════════════════════════
-   4. NAV TAB SWITCHING WITH RIPPLE
-══════════════════════════════════════════════ */
-var tabs  = document.querySelectorAll('.nav-tab');
-var pages = document.querySelectorAll('.page');
+    if (exactIdMatches.length > 0) {
+      renderApplicantList(exactIdMatches, query);
+      return;
+    }
 
-pages.forEach(function (p) {
-  if (!p.classList.contains('active')) p.style.display = 'none';
-});
+    // Partial ID or name match
+    var partialMatches = applicants.filter(function (p) {
+      var sNum = (p.student_num || '').toLowerCase();
+      var fName = (p.first_name || '').toLowerCase();
+      var mName = (p.middle_name || '').toLowerCase();
+      var lName = (p.last_name || '').toLowerCase();
+      var fullName = lName + ' ' + fName + ' ' + mName;
 
-function switchPage(id) {
-  var current = document.querySelector('.page.active');
-  var target  = document.getElementById('page-' + id);
-  if (!target || current === target) return;
+      return sNum.includes(norm) || fullName.includes(norm);
+    });
 
-  current.classList.remove('visible');
-  setTimeout(function () {
-    current.classList.remove('active');
-    current.style.display = 'none';
-    
-    target.style.display = 'block';
-    target.classList.add('active');
-    
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        target.classList.add('visible');
-        triggerReveal();
-        if (id === 'home') animateHomeStats();
+    renderApplicantList(partialMatches, query);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function (e) {
+      var query = e.target.value;
+      if (clearBtn) clearBtn.hidden = !query;
+
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(function () {
+        performSearch(query);
+      }, 140);
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function () {
+      if (searchInput) {
+        searchInput.value = '';
+        clearBtn.hidden = true;
+        showInitialEmptyState();
+        searchInput.focus();
+      }
+    });
+  }
+
+
+  /* ──────────────────────────────────────────────
+     6. MILESTONE LEDGER CATEGORY FILTERING
+  ────────────────────────────────────────────── */
+  var filterChips = document.querySelectorAll('.filter-chip');
+  var ledgerEntries = document.querySelectorAll('.ledger-entry');
+
+  filterChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var filter = this.getAttribute('data-filter');
+
+      filterChips.forEach(function (c) { c.classList.remove('active'); });
+      this.classList.add('active');
+
+      ledgerEntries.forEach(function (entry) {
+        var category = entry.getAttribute('data-category');
+        if (filter === 'all' || category === filter) {
+          entry.classList.remove('is-hidden');
+        } else {
+          entry.classList.add('is-hidden');
+        }
       });
     });
-  }, 280);
-}
-
-tabs.forEach(function (tab) {
-  tab.addEventListener('click', function (e) {
-    var span = document.createElement('span');
-    span.className = 'ripple';
-    var r = this.getBoundingClientRect();
-    span.style.left = (e.clientX - r.left) + 'px';
-    span.style.top  = (e.clientY - r.top)  + 'px';
-    this.appendChild(span);
-    setTimeout(function () { span.remove(); }, 700);
-
-    tabs.forEach(function (t) { t.classList.remove('active'); t.removeAttribute('aria-current'); });
-    this.classList.add('active');
-    this.setAttribute('aria-current', 'page');
-
-    switchPage(this.dataset.page);
   });
-});
 
-/* ══════════════════════════════════════════════
-   5. SCROLL REVEAL (Intersection Observer)
-══════════════════════════════════════════════ */
-var revealObs = new IntersectionObserver(function (entries) {
-  entries.forEach(function (entry) {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('in-view');
-      if (entry.target.classList.contains('stats-row') || entry.target.querySelector('.stat-number')) {
-        animateHomeStats();
+  /* ──────────────────────────────────────────────
+     7. SMOOTH ACCORDION (FAQ)
+  ────────────────────────────────────────────── */
+  var accordionTriggers = document.querySelectorAll('.accordion-trigger');
+
+  accordionTriggers.forEach(function (trigger) {
+    trigger.addEventListener('click', function () {
+      var isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+      // Close all others for single-open elegance
+      accordionTriggers.forEach(function (other) {
+        other.setAttribute('aria-expanded', 'false');
+      });
+
+      // Toggle current
+      if (!isExpanded) {
+        this.setAttribute('aria-expanded', 'true');
       }
-      revealObs.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
-
-function triggerReveal() {
-  var idx = 0;
-  document.querySelectorAll('.page.active .reveal:not(.in-view)').forEach(function (el) {
-    el.style.transitionDelay = (idx * 0.1) + 's';
-    revealObs.observe(el);
-    idx++;
-  });
-}
-
-triggerReveal();
-setTimeout(animateHomeStats, 250);
-
-/* ══════════════════════════════════════════════
-   6. FAQ ACCORDION
-══════════════════════════════════════════════ */
-document.querySelectorAll('.faq-question').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-    var body   = this.nextElementSibling;
-    var isOpen = this.getAttribute('aria-expanded') === 'true';
-
-    document.querySelectorAll('.faq-question[aria-expanded="true"]').forEach(function (q) {
-      q.setAttribute('aria-expanded', 'false');
-      q.nextElementSibling.classList.remove('open');
     });
-
-    if (!isOpen) {
-      this.setAttribute('aria-expanded', 'true');
-      body.classList.add('open');
-    }
   });
-});
+
+  /* ──────────────────────────────────────────────
+     8. GENTLE SWIPE / TOUCH TO DISMISS (MOBILE SHEET)
+  ────────────────────────────────────────────── */
+  var touchStartY = 0;
+  var touchCurrentY = 0;
+
+  if (drawer) {
+    drawer.addEventListener('touchstart', function (e) {
+      if (window.innerWidth <= 768) {
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    drawer.addEventListener('touchmove', function (e) {
+      if (window.innerWidth <= 768 && touchStartY > 0) {
+        touchCurrentY = e.touches[0].clientY;
+        var diff = touchCurrentY - touchStartY;
+        if (diff > 0 && drawer.scrollTop <= 0) {
+          drawer.style.transform = 'translateY(' + diff + 'px)';
+        }
+      }
+    }, { passive: true });
+
+    drawer.addEventListener('touchend', function () {
+      if (window.innerWidth <= 768 && touchStartY > 0) {
+        var diff = touchCurrentY - touchStartY;
+        if (diff > 120) {
+          drawer.style.transform = '';
+          closeDrawer();
+        } else {
+          drawer.style.transform = '';
+        }
+        touchStartY = 0;
+        touchCurrentY = 0;
+      }
+    });
+  }
+
+})();
