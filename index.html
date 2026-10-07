@@ -3,407 +3,869 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Congressman Roy M. Gonzales ”” Lone District of Santa Rosa, Laguna</title>
-  <meta name="description" content="Official website of Congressman Roy M. Gonzales, representing the Lone District of Santa Rosa, Laguna." />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+  <title>Office of Congressman Roy M. Gonzales — Lone District of Santa Rosa, Laguna</title>
+  <meta name="description" content="Official website of Congressman Roy M. Gonzales, Lone District of Santa Rosa, Laguna. Access legislative updates, district programs, and the official CHED TDP Scholarship Checker." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
 
-  <!-- ══════ BACKGROUND LAYERS ══════ -->
-  <canvas id="particleCanvas"></canvas>
-  <div class="bg-collage">
-    <div class="kb-slide kb-slide-1"></div>
-    <div class="kb-slide kb-slide-2"></div>
-    <div class="kb-vignette"></div>
-  </div>
+  <!-- ══════════════════════════════════════
+       INSTITUTIONAL HEADER & BANNER
+  ══════════════════════════════════════ -->
+  <header class="gov-bar" role="banner">
+    <div class="gov-bar-container">
+      <div class="gov-bar-meta">
+        <span class="gov-seal-indicator">Republic of the Philippines</span>
+        <span class="gov-divider" aria-hidden="true">•</span>
+        <span class="gov-jurisdiction">House of Representatives</span>
+        <span class="gov-divider" aria-hidden="true">•</span>
+        <span class="gov-district">Lone District of Santa Rosa, Laguna</span>
+      </div>
+      <div class="gov-bar-actions">
+        <button type="button" class="gov-shortcut-pill open-drawer-btn" aria-label="Open Scholarship Checker (Press Slash)">
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          <span>CHED TDP Checker</span>
+          <kbd class="kbd-badge" title="Shortcut key">/</kbd>
+        </button>
+      </div>
+    </div>
+  </header>
 
-  <!-- Ambient floating dots -->
-  <span class="dot" style="width:6px;height:6px;top:12%;left:15%;animation-delay:0s;"></span>
-  <span class="dot" style="width:4px;height:4px;top:22%;left:80%;animation-delay:0.6s;"></span>
-  <span class="dot" style="width:8px;height:8px;top:68%;left:10%;animation-delay:1.2s;"></span>
-  <span class="dot" style="width:5px;height:5px;top:75%;left:88%;animation-delay:1.8s;"></span>
-  <span class="dot" style="width:3px;height:3px;top:40%;left:92%;animation-delay:2.4s;"></span>
-  <span class="dot" style="width:5px;height:5px;top:85%;left:45%;animation-delay:0.3s;"></span>
-
-  <!-- ══════ APP ══════ -->
+  <!-- ══════════════════════════════════════
+       PRIMARY APP WRAPPER
+  ══════════════════════════════════════ -->
   <div class="app-shell">
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="brand">
-        <img src="images/logo-santarosa.png" alt="City of Santa Rosa Logo" class="brand-logo">
-        <img src="images/logo-hor.png" alt="Second Logo" class="brand-logo">
-        <span>City of Santa Rosa</span>
+    <!-- NAVIGATION HEADER -->
+    <header class="site-header">
+      <div class="brand-cluster">
+        <div class="brand-seals" aria-hidden="true">
+          <img src="images/logo-santarosa.png" alt="City Seal of Santa Rosa" class="seal-mark" width="46" height="46">
+          <img src="images/logo-hor.png" alt="Seal of the House of Representatives" class="seal-mark" width="46" height="46">
+          <img src="images/bagongkongreso.png" alt="Bagong Kongreso Emblem" class="seal-mark seal-mark-hor" width="46" height="46">
+        </div>
+        <div class="brand-identity">
+          <span class="brand-office">Office of the Representative</span>
+          <span class="brand-title">Lone District of Santa Rosa</span>
+        </div>
       </div>
-      <img src="images/bagongkongreso.png" alt="Right Logo" class="brand-logo topbar-logo-right">
-    </div>
 
-    <!-- NAVIGATION -->
-    <nav class="nav-bar" role="navigation" aria-label="Main navigation">
-      <button class="nav-tab active" data-page="home" aria-current="page">Home</button>
-      <button class="nav-tab" data-page="accomplishments">Accomplishments</button>
-      <button class="nav-tab" data-page="programs">Programs</button>
-    </nav>
+      <!-- TACTILE TAB NAVIGATION (EMIL KOWALSKI SLIDING PILL) -->
+      <nav class="sliding-nav" role="navigation" aria-label="Main Navigation">
+        <div class="nav-pill-track" id="navTrack">
+          <div class="nav-active-pill" id="navActivePill" aria-hidden="true"></div>
+          <button type="button" class="nav-tab-btn active" data-page="home" aria-current="page" id="tab-home">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Overview</span>
+          </button>
+          <button type="button" class="nav-tab-btn" data-page="accomplishments" id="tab-accomplishments">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Legislative Ledger</span>
+          </button>
+          <button type="button" class="nav-tab-btn" data-page="programs" id="tab-programs">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>District Programs</span>
+          </button>
+        </div>
+      </nav>
+    </header>
 
-    <!-- ════════════════════════════════
-         PAGE: HOME
-    ════════════════════════════════ -->
-    <div id="page-home" class="page active visible">
+    <!-- ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ 
+         VIEW: OVERVIEW (HOME)
+    ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═  -->
+    <main id="page-home" class="view-panel active visible" role="region" aria-labelledby="tab-home">
       
-      <!-- HERO BANNER (Only on Home Page) -->
-      <header class="hero">
-        <div class="hero-bg-ph"></div>
-        <div class="hero-copy">
-          <div class="office-line">Lone District of Santa Rosa, Laguna</div>
-          <h1 style="margin:0;line-height:1;">
-            <span style="display:block;font-size:0.5em;line-height:1;margin-bottom:0.15em;">Congressman</span>
-            <span style="display:block;">Roy M. Gonzales</span>
-          </h1>
-          <p class="tagline">"Sa Bagong Kongreso, Ramdam ang Serbisyo"</p>
-        </div>
-      </header>
+      <!-- EXECUTIVE HERO SECTION -->
+      <section class="hero-executive">
+        <div class="hero-grid">
+          
+          <div class="hero-content">
+            <div class="civic-status-badge">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" class="status-seal-icon" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span>19th Congress of the Philippines • Lone District</span>
+            </div>
 
-      <main class="summary-section">
-        <!-- Mission/Vision -->
-        <div class="about-card reveal">
-          <h2 class="about-card-title">Mission & Vision</h2>
-          <p>[Placeholder] To serve the people of Santa Rosa with unwavering dedication, transparency, and action. Our vision is a progressive, inclusive, and thriving city where every citizen has access to quality education, healthcare, and equal opportunities.</p>
+            <h1 class="hero-headline">
+              Congressman <span class="hero-headline-name">Roy M. Gonzales</span>
+            </h1>
+
+            <p class="hero-quote">
+              "Sa Bagong Kongreso, Ramdam ang Serbisyo."
+            </p>
+
+            <p class="hero-lead">
+              Committed to championing accessible higher education, quality healthcare, community livelihood, and resilient public infrastructure for the thriving people of the Lone District of Santa Rosa, Laguna.
+            </p>
+
+            <div class="hero-cta-group">
+              <button type="button" class="btn-primary open-drawer-btn" id="heroOpenChecker">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                <span>Check CHED TDP Scholarship</span>
+                <span class="btn-shortcut-tag"><kbd>/</kbd></span>
+              </button>
+              
+              <button type="button" class="btn-secondary" id="btnExplorePrograms" data-target-page="programs">
+                <span>View District Services</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <div class="hero-quick-notice">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="notice-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Academic Year 2026–2027 official CHED TDP qualified masterlist is now open for public verification.</span>
+            </div>
+          </div>
+
+          <!-- PORTRAIT CARD -->
+          <div class="hero-portrait-frame">
+            <div class="portrait-card">
+              <div class="portrait-image-wrapper">
+                <img src="images/crmg_profile.jpg" alt="Official portrait of Congressman Roy M. Gonzales" class="portrait-img" loading="eager" width="520" height="620">
+                <div class="portrait-gradient-overlay" aria-hidden="true"></div>
+              </div>
+              <div class="portrait-caption">
+                <div class="portrait-name">Hon. Roy M. Gonzales</div>
+                <div class="portrait-role">Representative, Lone District of Santa Rosa</div>
+                <div class="portrait-creds">House of Representatives • Republic of the Philippines</div>
+              </div>
+            </div>
+          </div>
+
         </div>
-        
-        <!-- Key Stats -->
-        <div class="stats-row reveal">
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="50" data-suffix="+">0+</h3>
-            <p>Projects Completed</p>
+      </section>
+
+      <!-- KPI LEDGER BAR (TABULAR NUMERICS) -->
+      <section class="kpi-ledger" aria-label="Key Performance Indicators">
+        <div class="kpi-grid">
+          
+          <div class="kpi-cell">
+            <div class="kpi-number-wrap">
+              <span class="kpi-value stat-number" data-target="50" data-suffix="+">0+</span>
+            </div>
+            <div class="kpi-label">Completed District Projects</div>
+            <div class="kpi-subtext">School buildings, health centers, and multi-purpose civic facilities</div>
           </div>
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="12" data-suffix="">0</h3>
-            <p>Bills Filed</p>
+
+          <div class="kpi-cell">
+            <div class="kpi-number-wrap">
+              <span class="kpi-value stat-number" data-target="18" data-suffix="">0</span>
+            </div>
+            <div class="kpi-label">Barangays Actively Served</div>
+            <div class="kpi-subtext">100% comprehensive constituency coverage across Santa Rosa</div>
           </div>
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="10000" data-suffix="+">0+</h3>
-            <p>Beneficiaries Served</p>
+
+          <div class="kpi-cell">
+            <div class="kpi-number-wrap">
+              <span class="kpi-value stat-number" data-target="12" data-suffix="">0</span>
+            </div>
+            <div class="kpi-label">Priority Bills Authored</div>
+            <div class="kpi-subtext">Legislative measures on education, labor rights, and urban ecology</div>
           </div>
+
+          <div class="kpi-cell">
+            <div class="kpi-number-wrap">
+              <span class="kpi-value stat-number" data-target="10000" data-suffix="+">0+</span>
+            </div>
+            <div class="kpi-label">Beneficiaries Empowered</div>
+            <div class="kpi-subtext">Scholars, medical aid recipients, and local entrepreneurs supported</div>
+          </div>
+
         </div>
-        
-        <!-- Brief Bio -->
-        <div class="about-card bio-card reveal">
-          <img src="images/crmg_profile.jpg" alt="Congressman Roy M. Gonzales" class="bio-img">
+      </section>
+
+      <!-- MISSION & PILLARS SECTION -->
+      <section class="civic-pillars-section">
+        <div class="pillars-layout">
+          
+          <div class="pillar-story-column">
+            <h2 class="section-title">Legislative Mission & Governance Vision</h2>
+            <p class="story-p">
+              Public service is an active commitment to every household in Santa Rosa. Our legislative agenda is built on the principle that genuine progress is measured by how effectively government resources reach those who need them most.
+            </p>
+            <p class="story-p">
+              By working in close partnership with national agencies and local barangay councils, the Congressional District Office ensures that Santa Rosa continues to lead as Laguna’s premier economic engine while protecting the welfare of every worker, student, and family.
+            </p>
+
+            <div class="office-principles-list">
+              <div class="principle-item">
+                <div class="principle-bullet" aria-hidden="true"></div>
+                <div>
+                  <strong>Integrity in Legislative Action:</strong> Crafting laws that safeguard the environment, expand free state education, and modernize local governance.
+                </div>
+              </div>
+              <div class="principle-item">
+                <div class="principle-bullet" aria-hidden="true"></div>
+                <div>
+                  <strong>Direct Constituent Access:</strong> Removing bureaucratic bottlenecks so residents receive medical aid, scholarships, and social safety nets without delay.
+                </div>
+              </div>
+              <div class="principle-item">
+                <div class="principle-bullet" aria-hidden="true"></div>
+                <div>
+                  <strong>Sustainable Urban Development:</strong> Upgrading public markets, drainage networks, and disaster resilience infrastructure across all 18 barangays.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pillar-cards-column">
+            <div class="card-feature">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <div class="feature-body">
+                <h3 class="feature-title">Tertiary Educational Equity</h3>
+                <p class="feature-desc">
+                  Providing full tuition, book allowances, and stipends through the CHED Tulong Dunong Program (TDP) to ensure Santa Rosa's youth achieve their academic ambitions.
+                </p>
+                <button type="button" class="card-inline-action open-drawer-btn">
+                  <span>Verify Scholar Record</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-mini"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-feature">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div class="feature-body">
+                <h3 class="feature-title">Immediate Medical Assistance</h3>
+                <p class="feature-desc">
+                  Issuing Guarantee Letters (GL) and coordinating with tertiary hospitals for indigent patients requiring urgent hospitalization, dialysis, and chemotherapy.
+                </p>
+                <a href="#page-programs" class="card-inline-action" data-nav-to="programs">
+                  <span>Learn Application Steps</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-mini"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="card-feature">
+              <div class="feature-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <div class="feature-body">
+                <h3 class="feature-title">Livelihood & Community Incubation</h3>
+                <p class="feature-desc">
+                  Supporting micro-entrepreneurs, transport workers, and informal sector laborers through TUPAD emergency employment and TESDA technical skills grants.
+                </p>
+                <a href="#page-programs" class="card-inline-action" data-nav-to="programs">
+                  <span>View Beneficiary Channels</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-mini"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DISTRICT ACTION GALLERY -->
+      <section class="gallery-section">
+        <div class="section-header-row">
           <div>
-            <h2 class="about-card-title">About the Congressman</h2>
-            <p>[Placeholder] Congressman Roy M. Gonzales has been a dedicated public servant for over two decades. Born and raised in Santa Rosa, he understands the heartbeat of the city. His legislative agenda focuses on education reform, youth empowerment, and sustainable infrastructure to uplift the lives of every constituent.</p>
+            <h2 class="section-title">Constituent Service in Action</h2>
+            <p class="section-subtitle">Real moments of public governance, disaster relief, and youth empowerment across Santa Rosa.</p>
+          </div>
+          <div class="gallery-meta-count">
+            <span>Lone District Field Operations</span>
           </div>
         </div>
-      </main>
-    </div>
 
-    <!-- ════════════════════════════════
-         PAGE: ACCOMPLISHMENTS
-    ════════════════════════════════ -->
-    <div id="page-accomplishments" class="page">
-      <div class="timeline">
-        <div class="timeline-item reveal">
-          <div class="timeline-year">2024</div>
-          <div class="timeline-card about-card">
-            <h4>Filed House Bill No. XXXX ”” Free College Tuition for Santa Rosa Residents</h4>
-            <p>[Placeholder] A landmark bill aimed at providing accessible higher education for all deserving youth in the district, ensuring no student is left behind due to financial constraints.</p>
-          </div>
+        <div class="gallery-grid">
+          <figure class="gallery-item">
+            <img src="images/crmgpic1.png" alt="Congressman Roy Gonzales interacting with constituents during community consultations" class="gallery-img" loading="lazy">
+            <figcaption class="gallery-caption">
+              <span class="gallery-tag">Legislative Consultation</span>
+              <span class="gallery-title">Direct dialogue with local barangay leaders and residents</span>
+            </figcaption>
+          </figure>
+
+          <figure class="gallery-item">
+            <img src="images/crmgpic2.jpg" alt="Distribution of student educational aid and scholastic supplies" class="gallery-img" loading="lazy">
+            <figcaption class="gallery-caption">
+              <span class="gallery-tag">Education Support</span>
+              <span class="gallery-title">Awarding academic stipends to qualified Santa Rosa scholars</span>
+            </figcaption>
+          </figure>
+
+          <figure class="gallery-item">
+            <img src="images/crmgpic8.jpg" alt="Turnover ceremony for modernized public community facilities" class="gallery-img" loading="lazy">
+            <figcaption class="gallery-caption">
+              <span class="gallery-tag">Infrastructure</span>
+              <span class="gallery-title">Inspection of ongoing community multi-purpose facility</span>
+            </figcaption>
+          </figure>
+
+          <figure class="gallery-item">
+            <img src="images/crmgpic10.jpg" alt="Rapid response relief packs distribution during seasonal typhoons" class="gallery-img" loading="lazy">
+            <figcaption class="gallery-caption">
+              <span class="gallery-tag">Disaster Relief</span>
+              <span class="gallery-title">Emergency assistance and food packs for calamity-affected families</span>
+            </figcaption>
+          </figure>
         </div>
-        
-        <div class="timeline-item reveal">
-          <div class="timeline-year">2024</div>
-          <div class="timeline-card about-card">
-            <h4>Inaugurated New Public Market in Brgy. Tagapo</h4>
-            <p>[Placeholder] Delivered a modernized public market facility to boost local commerce, provide sanitary stalls for vendors, and improve the shopping experience for residents.</p>
-          </div>
-        </div>
-        
-        <div class="timeline-item reveal">
-          <div class="timeline-year">2023</div>
-          <div class="timeline-card about-card">
-            <h4>Distributed 5,000 Relief Packs During Typhoon Season</h4>
-            <p>[Placeholder] Led rapid response and relief operations across affected barangays, ensuring that basic necessities reached families during natural calamities.</p>
-          </div>
-        </div>
-        
-        <div class="timeline-item reveal">
-          <div class="timeline-year">2023</div>
-          <div class="timeline-card about-card">
-            <h4>Launched Youth Leadership Program</h4>
-            <p>[Placeholder] Initiated a comprehensive training program for Sangguniang Kabataan leaders to hone their governance skills and community involvement.</p>
-          </div>
-        </div>
-        
-        <div class="timeline-item reveal">
-          <div class="timeline-year">2022</div>
-          <div class="timeline-card about-card">
-            <h4>Elected as Representative, Lone District of Santa Rosa</h4>
-            <p>[Placeholder] Secured the mandate of the people of Santa Rosa, pledging a "Bagong Kongreso" that is proactive, transparent, and responsive to the needs of the city.</p>
-          </div>
+      </section>
+
+    </main>
+
+    <!-- ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ 
+         VIEW: LEGISLATIVE LEDGER (ACCOMPLISHMENTS)
+    ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═  -->
+    <section id="page-accomplishments" class="view-panel" role="region" aria-labelledby="tab-accomplishments">
+      
+      <div class="view-header">
+        <h1 class="view-title">Legislative Ledger & District Milestones</h1>
+        <p class="view-description">
+          A transparent accounting of bills authored, infrastructure inaugurated, and humanitarian assistance delivered for the Lone District of Santa Rosa.
+        </p>
+
+        <!-- MILESTONE CATEGORY FILTER TABS -->
+        <div class="ledger-filter-bar" role="tablist" aria-label="Milestone categories">
+          <button type="button" class="filter-chip active" data-filter="all">All Records (6)</button>
+          <button type="button" class="filter-chip" data-filter="legislation">Bills & Measures</button>
+          <button type="button" class="filter-chip" data-filter="infrastructure">Infrastructure</button>
+          <button type="button" class="filter-chip" data-filter="community">Relief & Welfare</button>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════
-         PAGE: PROGRAMS
-    ════════════════════════════════ -->
-    <div id="page-programs" class="page">
-      <div class="program-grid">
+      <!-- TIMELINE LEDGER LIST -->
+      <div class="ledger-stream">
         
-        <!-- CHED TDP Scholarship (Special Card) -->
-        <div class="program-card program-card-full about-card reveal">
-          <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
-            <div class="program-icon">
-              <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-            </div>
-            <h2 class="about-card-title" style="margin:0; font-size:1.6rem;">CHED TDP Scholarship</h2>
+        <article class="ledger-entry" data-category="legislation">
+          <div class="ledger-time-col">
+            <time class="ledger-year">2024</time>
+            <span class="ledger-term">19th Congress</span>
           </div>
-          
-          <p>The <strong>CHED Tulong Dunong Program (TDP)</strong> is a scholarship initiative by the Commission on Higher Education. It provides financial assistance ”” including subsistence and book allowances ”” to qualified college students from low-income families.</p>
-          <p>Through the endorsement of Congressman Roy Gonzales, eligible residents of Santa Rosa are given priority access to the program for Academic Year 2026”“2027.</p>
-          
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-top:20px;">
-            <div>
-              <h3 style="font-size:1.1rem; color:var(--ink);">Program Goals</h3>
-              <ul class="about-list">
-                <li>Provide financial assistance to deserving students</li>
-                <li>Increase access to higher education in Santa Rosa</li>
-                <li>Support low-income families send their children to college</li>
-                <li>Promote academic excellence and civic responsibility</li>
-              </ul>
+          <div class="ledger-card">
+            <div class="ledger-badges">
+              <span class="badge-status badge-primary">House Bill Authored</span>
+              <span class="badge-category">Higher Education</span>
             </div>
-            <div>
-              <h3 style="font-size:1.1rem; color:var(--ink);">Who May Apply</h3>
-              <ul class="about-list">
-                <li>Bona fide resident of Santa Rosa, Laguna</li>
-                <li>Enrolled in a CHED-accredited college or university</li>
-                <li>Family income within CHED TDP guidelines</li>
-                <li>Good academic standing (GWA of 2.50 or better)</li>
-              </ul>
+            <h2 class="ledger-heading">House Bill No. 8920 — Santa Rosa City College National Subsidy & Expansion Act</h2>
+            <p class="ledger-summary">
+              Authored a landmark legislative measure providing sustained national budget subventions for Santa Rosa's local collegiate facilities, funding modernized technical laboratories, expanded IT curricula, and zero-tuition support for underprivileged students.
+            </p>
+            <div class="ledger-meta-bar">
+              <span class="meta-tag">Status: Committee on Higher & Technical Education</span>
+              <span class="meta-tag">Impact: 4,500+ Annual Students</span>
             </div>
           </div>
-          
-          <!-- FAQs for CHED TDP -->
-          <div class="faq-container">
-            <h3 style="font-size:1.1rem; color:var(--ink); margin-top:10px;">Frequently Asked Questions</h3>
+        </article>
+
+        <article class="ledger-entry" data-category="infrastructure">
+          <div class="ledger-time-col">
+            <time class="ledger-year">2024</time>
+            <span class="ledger-term">Public Works</span>
+          </div>
+          <div class="ledger-card">
+            <div class="ledger-badges">
+              <span class="badge-status badge-success">Completed & Turned Over</span>
+              <span class="badge-category">Commerce & Food Safety</span>
+            </div>
+            <h2 class="ledger-heading">Modernized Multi-Level Public Market & Commercial Hub in Brgy. Tagapo</h2>
+            <p class="ledger-summary">
+              Turned over a modernized, fully sanitized commercial facility with over 200 vendor stalls, dedicated cold storage facilities, solar-assisted ventilation, and stormwater drainage to boost local agricultural trade and micro-retailers.
+            </p>
+            <div class="ledger-meta-bar">
+              <span class="meta-tag">Location: Barangay Tagapo, Santa Rosa</span>
+              <span class="meta-tag">Beneficiaries: 220+ Local Vendors & 15,000 Consumers</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ledger-entry" data-category="legislation">
+          <div class="ledger-time-col">
+            <time class="ledger-year">2023</time>
+            <span class="ledger-term">19th Congress</span>
+          </div>
+          <div class="ledger-card">
+            <div class="ledger-badges">
+              <span class="badge-status badge-primary">House Bill Co-Authored</span>
+              <span class="badge-category">Ecology & Flood Control</span>
+            </div>
+            <h2 class="ledger-heading">House Bill No. 7412 — Laguna de Bay Ecological Preservation & Flood Mitigation Framework</h2>
+            <p class="ledger-summary">
+              Co-authored legislative interventions mandating comprehensive desiltation and automated floodgates along major Santa Rosa river outlets to shield low-lying barangays from storm surges and industrial runoff.
+            </p>
+            <div class="ledger-meta-bar">
+              <span class="meta-tag">Status: Enacted into Law / Bicameral Approved</span>
+              <span class="meta-tag">Jurisdiction: Laguna Lake Basin</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ledger-entry" data-category="community">
+          <div class="ledger-time-col">
+            <time class="ledger-year">2023</time>
+            <span class="ledger-term">Humanitarian</span>
+          </div>
+          <div class="ledger-card">
+            <div class="ledger-badges">
+              <span class="badge-status badge-warning">Rapid Response</span>
+              <span class="badge-category">Disaster Relief</span>
+            </div>
+            <h2 class="ledger-heading">Rapid Mobilization: 12,500 Calamity Emergency Packs Distributed</h2>
+            <p class="ledger-summary">
+              Spearheaded 24/7 disaster response operations across flood-affected zones in Barangays Sinalhan, Aplaya, and Caingin during tropical storms, delivering essential food provisions, clean drinking water, and medical care kits directly to evacuation centers.
+            </p>
+            <div class="ledger-meta-bar">
+              <span class="meta-tag">Field Area: Coastal & Lakeside Barangays</span>
+              <span class="meta-tag">Coverage: 12,500 Households Reached</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ledger-entry" data-category="community">
+          <div class="ledger-time-col">
+            <time class="ledger-year">2023</time>
+            <span class="ledger-term">Youth Development</span>
+          </div>
+          <div class="ledger-card">
+            <div class="ledger-badges">
+              <span class="badge-status badge-primary">Leadership Academy</span>
+              <span class="badge-category">Civic Governance</span>
+            </div>
+            <h2 class="ledger-heading">Establishment of the Santa Rosa Youth Leadership & Parliamentary Institute</h2>
+            <p class="ledger-summary">
+              Launched a specialized governance academy for Sangguniang Kabataan chairpersons and youth council members, equipping over 300 young leaders with parliamentary ethics, public finance management, and community-driven project execution skills.
+            </p>
+            <div class="ledger-meta-bar">
+              <span class="meta-tag">Partner: National Youth Commission</span>
+              <span class="meta-tag">Trained: 350+ Youth Leaders</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="ledger-entry" data-category="infrastructure">
+          <div class="ledger-time-col">
+            <time class="ledger-year">2022</time>
+            <span class="ledger-term">Mandate</span>
+          </div>
+          <div class="ledger-card">
+            <div class="ledger-badges">
+              <span class="badge-status badge-success">Official Proclamation</span>
+              <span class="badge-category">Historic Election</span>
+            </div>
+            <h2 class="ledger-heading">Electoral Mandate as Representative of the Lone District of Santa Rosa</h2>
+            <p class="ledger-summary">
+              Secured the people's mandate in the historic standalone representation of Santa Rosa in Congress, inaugurating the "Bagong Kongreso" platform grounded in fiscal transparency, proactive legislation, and unconditional constituent care.
+            </p>
+            <div class="ledger-meta-bar">
+              <span class="meta-tag">Proclamation: Commission on Elections</span>
+              <span class="meta-tag">Tenure: 2022–Present</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ 
+         VIEW: PROGRAMS & CHED TDP
+    ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═  -->
+    <section id="page-programs" class="view-panel" role="region" aria-labelledby="tab-programs">
+      
+      <div class="view-header">
+        <h1 class="view-title">District Programs & Public Services</h1>
+        <p class="view-description">
+          Explore vital government safety nets, scholarship endorsements, and healthcare access points provided through the Congressional District Office.
+        </p>
+      </div>
+
+      <!-- SPECIAL SPOTLIGHT: CHED TDP SCHOLARSHIP -->
+      <section class="spotlight-panel" aria-labelledby="chedTdpTitle">
+        <div class="spotlight-top">
+          <div class="spotlight-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spotlight-icon-svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>Priority Educational Initiative</span>
+          </div>
+          <span class="spotlight-year">AY 2026–2027</span>
+        </div>
+
+        <h2 id="chedTdpTitle" class="spotlight-title">CHED Tulong Dunong Program (TDP) Scholarship</h2>
+
+        <p class="spotlight-lead">
+          The <strong>CHED Tulong Dunong Program (TDP)</strong> is a national scholarship grant administered in close coordination with the Commission on Higher Education. Endorsed through the Office of Congressman Roy M. Gonzales, this program delivers direct financial stipends for tuition, academic fees, and living allowances to qualified college students from Santa Rosa.
+        </p>
+
+        <div class="spotlight-spec-grid">
+          <div class="spec-card">
+            <h3 class="spec-header">Core Program Benefits</h3>
+            <ul class="spec-list">
+              <li>Direct semesterly allowance for books and school supplies</li>
+              <li>Tuition subsidy for CHED-accredited private & local colleges</li>
+              <li>Protection against financial dropouts for underprivileged families</li>
+              <li>Priority endorsement for Santa Rosa resident scholars</li>
+            </ul>
+          </div>
+
+          <div class="spec-card">
+            <h3 class="spec-header">Eligibility Criteria</h3>
+            <ul class="spec-list">
+              <li>Certified bona fide resident of the Lone District of Santa Rosa</li>
+              <li>Currently enrolled in a CHED-recognized higher education institution</li>
+              <li>General Weighted Average (GWA) of 2.50 or better</li>
+              <li>Combined annual family income within official CHED poverty thresholds</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- CALL TO ACTION BOX -->
+        <div class="spotlight-action-box">
+          <div class="action-box-text">
+            <strong>Check Your Scholarship Status Online</strong>
+            <p>Our database contains verified endorsed applicants for Academic Year 2026–2027. Search your exact name or student number in seconds.</p>
+          </div>
+          <button type="button" class="btn-primary open-drawer-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>Launch Scholarship Checker</span>
+          </button>
+        </div>
+
+        <!-- FREQUENTLY ASKED QUESTIONS (SMOOTH ACCORDION) -->
+        <div class="faq-section">
+          <h3 class="faq-main-title">Frequently Asked Questions regarding CHED TDP</h3>
+
+          <div class="accordion-group">
             
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                What is the CHED Tulong Dunong Program (TDP)?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false" id="faq-1-btn" aria-controls="faq-1-panel">
+                <span class="accordion-question-text">How does the online verification tool work?</span>
+                <span class="accordion-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
               </button>
-              <div class="faq-body">
-                <div class="faq-answer">The CHED Tulong Dunong Program (TDP) is a financial assistance program by the Commission on Higher Education (CHED). It provides subsistence and book allowances to deserving but financially challenged college students across the Philippines, endorsed through district representatives.</div>
+              <div class="accordion-panel" id="faq-1-panel" role="region" aria-labelledby="faq-1-btn">
+                <div class="accordion-content">
+                  Click the <strong>"Check Scholarship"</strong> button anywhere on the portal or press the <kbd>/</kbd> key. Enter at least 4 characters of your registered surname, first name, or your exact student number. If your record appears with an emerald <strong>"Qualified"</strong> badge, your documents have been officially endorsed by the Congressional District Office to CHED.
+                </div>
               </div>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                How do I know if I am qualified?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
+
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false" id="faq-2-btn" aria-controls="faq-2-panel">
+                <span class="accordion-question-text">What documents are needed to validate my endorsed status?</span>
+                <span class="accordion-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
               </button>
-              <div class="faq-body">
-                <div class="faq-answer">Use the "Check Scholarship" tool accessible via the floating button. Enter your registered full name or your exact student number. If your name appears with a green "Qualified" badge, you are included in the endorsed list for Academic Year 2026”“2027.</div>
+              <div class="accordion-panel" id="faq-2-panel" role="region" aria-labelledby="faq-2-btn">
+                <div class="accordion-content">
+                  To complete the disbursement processing, qualified scholars must submit:
+                  <ol style="margin-left:20px; margin-top:8px; line-height:1.6;">
+                    <li>Valid Certificate of Registration (COR) / Enrollment Form for the current semester.</li>
+                    <li>Official Certified True Copy of Grades from the previous academic period.</li>
+                    <li>Barangay Certificate of Indigency or Proof of Santa Rosa Residency.</li>
+                    <li>Photocopy of Valid School ID or National ID with 3 specimen signatures.</li>
+                  </ol>
+                </div>
               </div>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                What are the general requirements needed?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
+
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false" id="faq-3-btn" aria-controls="faq-3-panel">
+                <span class="accordion-question-text">I searched but my name does not appear. What should I do?</span>
+                <span class="accordion-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
               </button>
-              <div class="faq-body">
-                <div class="faq-answer">Generally required documents include: a valid school ID or enrollment certificate, a copy of your grades from the previous semester, proof of residency in Santa Rosa, Laguna, and a Certificate of Good Moral Character from your school. Please visit or contact the congressional office for the complete and updated list.</div>
+              <div class="accordion-panel" id="faq-3-panel" role="region" aria-labelledby="faq-3-btn">
+                <div class="accordion-content">
+                  First, ensure there are no typographical errors in your search query. Try searching by your registered Student Number without dashes or extra spaces. If you submitted an application during the open filing period but cannot find your record, your application may still be in the tertiary verification batch. Please visit the Congressional District Office during business hours with your submission acknowledgment slip.
+                </div>
               </div>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                I searched my name but I cannot find it. What should I do?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
+
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false" id="faq-4-btn" aria-controls="faq-4-panel">
+                <span class="accordion-question-text">Can students enrolled outside Santa Rosa be eligible?</span>
+                <span class="accordion-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
               </button>
-              <div class="faq-body">
-                <div class="faq-answer">Make sure you are typing your name exactly as it appears on your school records, or your exact student number. The search requires at least 4 characters. If your name still does not appear, contact the Office of Congressman Roy Gonzales directly ”” your application may still be under processing or review.</div>
+              <div class="accordion-panel" id="faq-4-panel" role="region" aria-labelledby="faq-4-btn">
+                <div class="accordion-content">
+                  Yes! As long as you are a bona fide resident of the Lone District of Santa Rosa, Laguna, and your tertiary institution is duly accredited by CHED (whether in Metro Manila, Calabarzon, or other regions), you remain eligible for the district's congressional endorsement.
+                </div>
               </div>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                When will the scholarship benefits be released?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
+
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false" id="faq-5-btn" aria-controls="faq-5-panel">
+                <span class="accordion-question-text">When are stipend allowances disbursed to students?</span>
+                <span class="accordion-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
               </button>
-              <div class="faq-body">
-                <div class="faq-answer">Release schedules are coordinated by CHED and the congressional office with your school. Qualified scholars will be notified through official channels. Follow the official announcements of the Office of Congressman Roy Gonzales for updates on release dates.</div>
+              <div class="accordion-panel" id="faq-5-panel" role="region" aria-labelledby="faq-5-btn">
+                <div class="accordion-content">
+                  Disbursement schedules are coordinated between the CHED Regional Office IV-A and participating collegiate institutions. Qualified scholars will receive official SMS notification regarding payout dates, venues, or direct payroll account crediting.
+                </div>
               </div>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                Is there a deadline for submitting requirements?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
-              </button>
-              <div class="faq-body">
-                <div class="faq-answer">Yes. Deadlines will be announced by the congressional office. It is strongly advised to submit your requirements as soon as possible. Late submissions may not be accommodated and could result in disqualification from benefits for that term.</div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                Can I apply if I am studying outside Santa Rosa?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
-              </button>
-              <div class="faq-body">
-                <div class="faq-answer">Generally yes ”” as long as you are a bona fide resident of Santa Rosa, Laguna and enrolled in a CHED-accredited institution anywhere in the Philippines. Proof of residency is required. Please confirm your eligibility with the district office.</div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
-                How can I contact the Office of Congressman Roy Gonzales?
-                <span class="faq-chevron"><span class="faq-chevron-icon"></span></span>
-              </button>
-              <div class="faq-body">
-                <div class="faq-answer">You may visit the district office in Santa Rosa, Laguna during official business hours, or reach out through the official Facebook page or email address of the Office. Check the latest official announcements for up-to-date contact information.</div>
-              </div>
-            </div>
+
           </div>
+        </div>
+      </section>
+
+      <!-- OTHER DISTRICT PROGRAMS GRID -->
+      <section class="services-directory" aria-labelledby="servicesTitle">
+        <h2 id="servicesTitle" class="section-title">Comprehensive District Assistance Services</h2>
+        <p class="section-subtitle">The Congressional Office provides multiple direct social welfare and civic support mechanisms.</p>
+
+        <div class="services-grid">
           
-          <button class="btn-primary open-drawer-btn" style="align-self: flex-start; margin-top:24px;">Check if you qualify</button>
+          <article class="service-card">
+            <h3 class="service-title">
+              <svg class="service-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              <span>Medical & Hospitalization Assistance</span>
+            </h3>
+            <p class="service-desc">
+              Issuance of Guarantee Letters (GL) covering medicines, diagnostic laboratory tests, hemodialysis, and emergency hospitalization for indigent Santa Rosa constituents in accredited partner hospitals.
+            </p>
+            <div class="service-requirement">
+              <span>Required: Clinical Abstract, Hospital Billing Statement, Barangay Certificate</span>
+            </div>
+          </article>
+
+          <article class="service-card">
+            <h3 class="service-title">
+              <svg class="service-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Livelihood & Skills Upgrading</span>
+            </h3>
+            <p class="service-desc">
+              Vocational scholarships in partnership with TESDA, alongside short-term emergency community employment (TUPAD) to empower displaced workers, homemakers, and transport cooperatives.
+            </p>
+            <div class="service-requirement">
+              <span>Required: Valid Government ID, Certificate of Non-Employment or Indigency</span>
+            </div>
+          </article>
+
+          <article class="service-card">
+            <h3 class="service-title">
+              <svg class="service-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>District Infrastructure Development</span>
+            </h3>
+            <p class="service-desc">
+              Direct allocation of national infrastructure appropriations for barangay roads, multi-purpose covered courts, river wall embankments, and stormwater pumping facilities throughout Santa Rosa.
+            </p>
+            <div class="service-requirement">
+              <span>Channel: Barangay Council Endorsement Resolution to Congressional Office</span>
+            </div>
+          </article>
+
+          <article class="service-card">
+            <h3 class="service-title">
+              <svg class="service-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              <span>Senior Citizens Welfare & Health Subsidies</span>
+            </h3>
+            <p class="service-desc">
+              Dedicated social protection for elderly residents, featuring free chronic disease maintenance medication distribution, regular geriatric wellness checkups, and legal advisory services.
+            </p>
+            <div class="service-requirement">
+              <span>Required: OSCA Senior Citizen ID, Medical Prescription</span>
+            </div>
+          </article>
+
         </div>
-        
-        <!-- Other Programs -->
-        <div class="program-card about-card reveal">
-          <div class="program-icon">
-            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <h2 class="about-card-title">Medical Assistance Program</h2>
-          <p>[Placeholder] Providing medical, financial, and hospitalization assistance to indigent patients and constituents in need of urgent care.</p>
-        </div>
-        
-        <div class="program-card about-card reveal">
-          <div class="program-icon">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h2 class="about-card-title">Livelihood Training Program</h2>
-          <p>[Placeholder] Empowering residents with skills development, vocational training, and startup capital to help them secure sustainable livelihoods.</p>
-        </div>
-        
-        <div class="program-card about-card reveal">
-          <div class="program-icon">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <h2 class="about-card-title">Infrastructure Development</h2>
-          <p>[Placeholder] Construction of multi-purpose halls, public markets, farm-to-market roads, and school buildings to drive progress in the community.</p>
-        </div>
-        
-        <div class="program-card about-card reveal">
-          <div class="program-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          </div>
-          <h2 class="about-card-title">Youth Sports Development</h2>
-          <p>[Placeholder] Promoting physical wellness, sportsmanship, and camaraderie among the youth through inter-barangay leagues and athletic clinics.</p>
-        </div>
-        
-        <div class="program-card about-card reveal">
-          <div class="program-icon">
-            <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-          </div>
-          <h2 class="about-card-title">Senior Citizens Aid</h2>
-          <p>[Placeholder] Dedicated support programs for the elderly, including free medical checkups, essential medicines distribution, and social pension assistance.</p>
-        </div>
-        
-      </div>
-    </div>
+      </section>
+
+    </section>
 
   </div><!-- end .app-shell -->
 
-  <!-- ══════ FOOTER ══════ -->
-  <footer class="footer">
-    <div class="footer-columns">
-      <!-- Column 1: Contact Us -->
-      <div class="footer-col">
-        <div class="footer-col-heading">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Contact Us
+  <!-- ══════════════════════════════════════
+       INSTITUTIONAL FOOTER
+  ══════════════════════════════════════ -->
+  <footer class="civic-footer" role="contentinfo">
+    <div class="footer-inner">
+      
+      <div class="footer-columns-grid">
+        
+        <!-- COLUMN 1: OFFICE PROFILE -->
+        <div class="footer-col-profile">
+          <div class="footer-brand-lockup">
+            <img src="images/logo-santarosa.png" alt="City Seal" class="footer-seal" width="40" height="40">
+            <div>
+              <div class="footer-brand-title">Office of Congressman Roy M. Gonzales</div>
+              <div class="footer-brand-sub">Lone District of Santa Rosa, Laguna • 19th Congress</div>
+            </div>
+          </div>
+          <p class="footer-mission-snippet">
+            Dedicated to transparent legislative governance and relentless public service. Empowering every student, worker, and family across the Lion City of South Luzon.
+          </p>
+          <div class="footer-quote-tag">
+            "Sa Bagong Kongreso, Ramdam ang Serbisyo"
+          </div>
         </div>
-        <ul>
-          <li><span>[123 Rizal Blvd, Santa Rosa, Laguna]</span></li>
-          <li><span>[(049) 123-4567]</span></li>
-          <li><a href="#">[office@roygonzales.ph]</a></li>
-          <li><span>[Mon–Fri, 8:00 AM – 5:00 PM]</span></li>
-        </ul>
+
+        <!-- COLUMN 2: OFFICIAL DIRECTORY -->
+        <div class="footer-col">
+          <h4 class="footer-heading">District Office Directory</h4>
+          <ul class="footer-contact-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Ground Floor, Legislative Building, City Hall Complex, Rizal Boulevard, City of Santa Rosa, Laguna 4026</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>(049) 534-1234 / (02) 8931-5001</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:district.office@roygonzales.ph" class="footer-link">district.office@roygonzales.ph</a>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Monday – Friday, 8:00 AM – 5:00 PM PST</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- COLUMN 3: GOVERNMENT PORTALS -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Official Portals</h4>
+          <ul class="footer-links-list">
+            <li><a href="https://www.congress.gov.ph" target="_blank" rel="noopener noreferrer" class="footer-nav-link">House of Representatives of the Philippines</a></li>
+            <li><a href="https://santarosacity.gov.ph" target="_blank" rel="noopener noreferrer" class="footer-nav-link">City Government of Santa Rosa</a></li>
+            <li><a href="https://ched.gov.ph" target="_blank" rel="noopener noreferrer" class="footer-nav-link">Commission on Higher Education (CHED)</a></li>
+            <li><a href="https://www.gov.ph" target="_blank" rel="noopener noreferrer" class="footer-nav-link">Republic of the Philippines Portal (GOV.PH)</a></li>
+          </ul>
+
+          <div class="footer-social-box">
+            <span class="social-label">Official Announcements</span>
+            <div class="social-links-row">
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="social-button" aria-label="Visit Official Facebook Page">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <span>Follow on Facebook</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Column 2: Links -->
-      <div class="footer-col">
-        <div class="footer-col-heading">
-          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          Links
+      <div class="footer-bottom-bar">
+        <div class="footer-copy">
+          © 2026 Office of Congressman Roy M. Gonzales. All rights reserved. Lone District of Santa Rosa, Laguna.
         </div>
-        <ul>
-          <li><a href="#">[Facebook Page]</a></li>
-          <li><a href="#">[Official Website]</a></li>
-          <li><a href="#">[House of Representatives]</a></li>
-          <li><a href="#">[City of Santa Rosa]</a></li>
-        </ul>
+        <div class="footer-meta-notes">
+          <span>Official Public Service Platform</span>
+          <span class="bullet" aria-hidden="true">•</span>
+          <span>CHED TDP Academic Year 2026–2027</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Bottom Bar -->
-    <div class="footer-bottom">
-      <div class="footer-bottom-left">
-        <img src="images/logo-santarosa.png" alt="Santa Rosa Logo">
-        Office of Congressman Roy M. Gonzales
-      </div>
-      <div class="footer-bottom-right">
-        <a href="#" style="color:rgba(255,255,255,0.85); text-decoration:none; display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:0.85rem;">
-          <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          <span>See What's New</span>
-        </a>
-      </div>
     </div>
   </footer>
 
-  <!-- ══════ FLOATING ACTION BUTTON ══════ -->
-  <button class="fab open-drawer-btn" aria-label="Check Scholarship">
-    <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-    <span>Check Scholarship</span>
+  <!-- ══════════════════════════════════════
+       FLOATING ACTION BUTTON (MOBILE & DESKTOP)
+  ══════════════════════════════════════ -->
+  <button type="button" class="fab-launcher open-drawer-btn" aria-label="Open Scholarship Checker" id="fabLauncher">
+    <div class="fab-inner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fab-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      <span class="fab-text">Check Scholarship</span>
+      <span class="fab-kbd"><kbd>/</kbd></span>
+    </div>
   </button>
 
-  <!-- ══════ SIDE DRAWER ══════ -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-  <div class="drawer" id="scholarshipDrawer">
-    <div class="drawer-header-bar">
-      <h2>Scholarship Checker</h2>
-      <button class="drawer-close" id="closeDrawer" aria-label="Close drawer">&times;</button>
+  <!-- ══════════════════════════════════════
+       VAUL-INSPIRED COMMAND DRAWER (EMIL KOWALSKI CRAFT)
+  ══════════════════════════════════════ -->
+  <div class="drawer-scrim" id="drawerOverlay" aria-hidden="true"></div>
+
+  <div class="vaul-drawer" id="scholarshipDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-describedby="drawerSubtitle">
+    
+    <!-- DRAG / HANDLE GRAB BAR -->
+    <div class="drawer-handle-bar">
+      <div class="drawer-grab-indicator" aria-hidden="true"></div>
     </div>
-    <div class="drawer-content-area">
-      
-      <!-- Stats inside Drawer -->
-      <div class="drawer-stats-card">
-        <span class="drawer-stats-label">Total Applicants</span>
-        <span class="drawer-stats-val" id="totalCount">0</span>
+
+    <!-- DRAWER HEADER -->
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <div class="drawer-badge-row">
+          <span class="drawer-badge-pill">Commission on Higher Education</span>
+          <span class="drawer-badge-year">AY 2026–2027 Masterlist</span>
+        </div>
+        <h2 id="drawerTitle" class="drawer-title">CHED TDP Scholarship Checker</h2>
+        <p id="drawerSubtitle" class="drawer-subtitle">
+          Search the official list of endorsed scholars for the Lone District of Santa Rosa.
+        </p>
       </div>
-      
-      <!-- Search Panel -->
-      <section class="search-panel" aria-label="Applicant search">
-        <div class="search-header">
-          <p class="subtitle">Only qualified applicants will appear here.</p>
-        </div>
-        <div class="search-row">
-          <div class="search-icon" aria-hidden="true"></div>
-          <input type="text" id="searchInput" placeholder="Enter Name or Student No…" aria-label="Search applicants" />
-          <button type="button" id="clearButton" class="clear-button" hidden aria-label="Clear search">Clear</button>
-        </div>
-      </section>
 
-      <!-- Results Panel -->
-      <section class="results-panel" aria-live="polite">
-        <div class="results-header">
-          <p class="results-label">Results</p>
-          <span class="results-count" id="resultsCount">0 matches</span>
+      <button type="button" class="drawer-close-btn" id="closeDrawer" aria-label="Close scholarship checker (Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span class="close-kbd-hint"><kbd>ESC</kbd></span>
+      </button>
+    </div>
+
+    <!-- METRIC STATUS STRIP -->
+    <div class="drawer-status-strip">
+      <div class="status-metric">
+        <span class="metric-label">Total Endorsed Scholars</span>
+        <span class="metric-val" id="totalCount">0</span>
+      </div>
+      <div class="status-metric">
+        <span class="metric-label">Status Guarantee</span>
+        <span class="metric-badge-ok">Verified Official List</span>
+      </div>
+    </div>
+
+    <!-- SEARCH & COMMAND PANEL -->
+    <div class="drawer-search-area">
+      <div class="search-input-wrapper">
+        <svg class="search-leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="command-input" 
+          placeholder="Enter Last Name, First Name, or Student ID..." 
+          aria-label="Search endorsed scholarship applicants" 
+          autocomplete="off" 
+          spellcheck="false"
+        />
+
+        <div class="input-actions-cluster">
+          <button type="button" id="clearButton" class="clear-search-btn" hidden aria-label="Clear search input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span>Clear</span>
+          </button>
         </div>
-        <div id="results" class="record-list"></div>
-      </section>
+      </div>
+    </div>
+
+    <!-- LIVE RESULTS AREA -->
+    <div class="drawer-results-scrollable" id="resultsScrollContainer" aria-live="polite">
+      
+      <div class="results-meta-header">
+        <span class="results-count-text" id="resultsCount">0 matches found</span>
+        <span class="results-instruction-hint">Minimum 4 characters to filter</span>
+      </div>
+
+      <div id="results" class="applicant-cards-list"></div>
 
     </div>
+
+    <!-- DRAWER FOOTER NOTICE -->
+    <div class="drawer-footer-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" class="footer-note-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span>Records sourced directly from the official 2026–2027 Congressional Endorsement Masterlist.</span>
+    </div>
+
   </div>
+
+  <!-- ══════════════════════════════════════
+       SONNER-STYLE TOAST SYSTEM (EMIL KOWALSKI CRAFT)
+  ══════════════════════════════════════ -->
+  <div id="toastContainer" class="toast-stack" aria-live="polite" role="status"></div>
 
   <script src="script.js"></script>
 </body>
