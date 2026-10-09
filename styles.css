@@ -217,10 +217,7 @@ time {
   border-color: var(--civic-red);
   transform: translateY(-1px);
 }
-.gov-shortcut-pill .icon-inline {
-  width: 14px;
-  height: 14px;
-}
+
 
 .kbd-badge {
   background-color: rgba(0, 0, 0, 0.35);
@@ -344,11 +341,7 @@ time {
   white-space: nowrap;
 }
 
-.nav-tab-btn .nav-icon {
-  width: 16px;
-  height: 16px;
-  transition: transform var(--transition-fast);
-}
+
 
 .nav-tab-btn:hover:not(.active) {
   color: var(--civic-navy);
@@ -406,8 +399,11 @@ time {
   box-shadow: var(--shadow-sm);
 }
 
-.status-seal-icon {
-  color: var(--civic-red);
+.status-seal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--civic-red);
   flex-shrink: 0;
 }
 
@@ -501,14 +497,7 @@ time {
 .btn-icon {
   width: 18px;
   height: 18px;
-}
-.btn-icon-arrow {
-  width: 16px;
-  height: 16px;
-  transition: transform var(--transition-fast);
-}
-.btn-secondary:hover .btn-icon-arrow {
-  transform: translateX(3px);
+  flex-shrink: 0;
 }
 
 .btn-shortcut-tag {
@@ -525,7 +514,7 @@ time {
 
 .hero-quick-notice {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   background-color: var(--surface);
   border: 1px solid var(--border);
@@ -536,12 +525,26 @@ time {
   line-height: 1.45;
   box-shadow: var(--shadow-sm);
 }
+
 .notice-icon {
   width: 18px;
   height: 18px;
   color: var(--civic-gold);
   flex-shrink: 0;
-  margin-top: 2px;
+}
+
+.notice-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--civic-gold);
+  background-color: rgba(180, 83, 9, 0.1);
+  border: 1px solid rgba(180, 83, 9, 0.25);
+  padding: 1px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  line-height: 1.4;
 }
 
 /* Portrait Card */
@@ -755,20 +758,14 @@ time {
   border-color: var(--border-strong);
 }
 
-.feature-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background-color: var(--civic-red-subtle);
+.feature-tag {
+  display: inline-block;
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--civic-red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.feature-icon-box svg {
-  width: 22px;
-  height: 22px;
+  margin-bottom: 6px;
 }
 
 .feature-body {
@@ -793,22 +790,14 @@ time {
 .card-inline-action {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--civic-red);
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: transform var(--transition-fast), color var(--transition-fast);
 }
 .card-inline-action:hover {
   color: var(--civic-red-hover);
-}
-.arrow-mini {
-  width: 14px;
-  height: 14px;
-  transition: transform var(--transition-fast);
-}
-.card-inline-action:hover .arrow-mini {
   transform: translateX(3px);
 }
 
@@ -1098,10 +1087,6 @@ time {
   font-size: 0.8rem;
   font-weight: 700;
 }
-.spotlight-icon-svg {
-  width: 16px;
-  height: 16px;
-}
 
 .spotlight-year {
   font-family: var(--font-mono);
@@ -1254,24 +1239,41 @@ time {
   background-color: var(--surface-hover);
 }
 
-.accordion-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  transition: transform 280ms var(--spring-physics);
+.accordion-indicator {
+  position: relative;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 240ms var(--spring-physics), color 200ms ease;
 }
-.accordion-icon svg {
-  width: 18px;
-  height: 18px;
+.accordion-indicator::before,
+.accordion-indicator::after {
+  content: "";
+  position: absolute;
+  background-color: currentColor;
+  border-radius: var(--radius-xs);
+  transition: transform 240ms var(--spring-physics), opacity 200ms ease;
+}
+.accordion-indicator::before {
+  top: 6px;
+  left: 1px;
+  width: 12px;
+  height: 2px;
+}
+.accordion-indicator::after {
+  top: 1px;
+  left: 6px;
+  width: 2px;
+  height: 12px;
 }
 
-.accordion-trigger[aria-expanded="true"] .accordion-icon {
-  transform: rotate(180deg);
+.accordion-trigger[aria-expanded="true"] .accordion-indicator {
   color: var(--civic-red);
+}
+.accordion-trigger[aria-expanded="true"] .accordion-indicator::after {
+  transform: rotate(90deg);
+  opacity: 0;
 }
 
 /* Emil Kowalski Smooth Height CSS Grid Transition */
@@ -1334,13 +1336,6 @@ time {
   font-weight: 700;
   color: var(--civic-navy);
   margin-bottom: 8px;
-}
-
-.service-title-icon {
-  width: 20px;
-  height: 20px;
-  color: var(--civic-red);
-  flex-shrink: 0;
 }
 
 .service-desc {
@@ -1456,6 +1451,12 @@ time {
   margin-top: 3px;
 }
 
+.social-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .footer-link,
 .footer-nav-link {
   color: rgba(255, 255, 255, 0.8);
@@ -1551,10 +1552,6 @@ time {
   gap: 9px;
   font-weight: 700;
   font-size: 0.9rem;
-}
-.fab-icon {
-  width: 18px;
-  height: 18px;
 }
 .fab-kbd {
   background-color: rgba(0, 0, 0, 0.25);
@@ -1743,18 +1740,9 @@ time {
   align-items: center;
 }
 
-.search-leading-icon {
-  position: absolute;
-  left: 14px;
-  width: 18px;
-  height: 18px;
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
 .command-input {
   width: 100%;
-  padding: 12px 42px 12px 42px;
+  padding: 12px 64px 12px 16px;
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-md);
   font-size: 0.925rem;
@@ -1904,15 +1892,23 @@ time {
 .badge-qualified {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   background-color: var(--success-bg);
   color: var(--success);
   border: 1px solid var(--success-border);
-  padding: 4px 9px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.badge-qualified-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--success);
   flex-shrink: 0;
 }
 
@@ -1921,13 +1917,6 @@ time {
   text-align: center;
   padding: 42px 20px;
   color: var(--text-secondary);
-}
-
-.empty-state-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  color: var(--border-strong);
 }
 
 .empty-state-title {
@@ -1955,10 +1944,6 @@ time {
   align-items: flex-start;
   gap: 8px;
   line-height: 1.4;
-}
-.footer-note-icon {
-  flex-shrink: 0;
-  margin-top: 2px;
 }
 
 /* ── 18. SONNER-STYLE TOAST SYSTEM (EMIL KOWALSKI CRAFT) ── */
@@ -2007,11 +1992,19 @@ time {
   }
 }
 
-.toast-icon {
-  width: 18px;
-  height: 18px;
-  color: #34d399;
+.toast-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   flex-shrink: 0;
+}
+
+.toast-indicator-success {
+  background-color: var(--toast-emerald);
+}
+
+.toast-indicator-info {
+  background-color: var(--civic-gold);
 }
 
 /* ── 19. RESPONSIVE BREAKPOINTS ── */
