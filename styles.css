@@ -159,7 +159,7 @@ time {
   background-color: var(--civic-navy-dark);
   color: #ffffff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 7px 20px;
+  padding: 12px 20px;
   font-size: 0.775rem;
   letter-spacing: 0.02em;
   position: relative;
@@ -180,6 +180,7 @@ time {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  line-height: 1.5;
 }
 
 .gov-seal-indicator {
