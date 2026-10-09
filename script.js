@@ -490,4 +490,70 @@
     });
   }
 
+  /* ──────────────────────────────────────────────
+     9. EXECUTIVE CEREMONIAL INTRO SPLASH
+  ────────────────────────────────────────────── */
+  var introElement = document.getElementById('executiveIntro');
+  var introSkipBtn = document.getElementById('introSkipBtn');
+
+  if (introElement) {
+    var hasSeenIntro = false;
+    try {
+      hasSeenIntro = sessionStorage.getItem('crmg_intro_viewed') === 'true';
+    } catch (e) {
+      hasSeenIntro = false;
+    }
+
+    // Allow testing via URL query e.g. ?intro=1 or ?intro=true
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('intro') === '1' || urlParams.get('intro') === 'true') {
+      hasSeenIntro = false;
+    }
+
+    if (hasSeenIntro) {
+      introElement.classList.add('intro-hidden');
+    } else {
+      var introDismissed = false;
+      var dismissIntro = function () {
+        if (introDismissed) return;
+        introDismissed = true;
+        try {
+          sessionStorage.setItem('crmg_intro_viewed', 'true');
+        } catch (e) {}
+
+        introElement.classList.add('intro-leaving');
+        setTimeout(function () {
+          introElement.classList.add('intro-hidden');
+          introElement.classList.remove('intro-leaving');
+        }, 750);
+      };
+
+      // Automatically advance after 2.3 seconds
+      var autoTimer = setTimeout(dismissIntro, 2300);
+
+      // Explicit dismiss button
+      if (introSkipBtn) {
+        introSkipBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          clearTimeout(autoTimer);
+          dismissIntro();
+        });
+      }
+
+      // Tap or click anywhere on intro screen to dismiss
+      introElement.addEventListener('click', function () {
+        clearTimeout(autoTimer);
+        dismissIntro();
+      });
+
+      // Keyboard dismissal (Enter, Space, or Escape)
+      document.addEventListener('keydown', function (e) {
+        if (!introDismissed && (e.key === 'Enter' || e.key === 'Escape' || e.key === ' ')) {
+          clearTimeout(autoTimer);
+          dismissIntro();
+        }
+      });
+    }
+  }
+
 })();
