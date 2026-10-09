@@ -19,11 +19,8 @@
     toast.className = 'sonner-toast';
     toast.setAttribute('role', 'status');
 
-    var checkIcon = '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
-    var infoIcon = '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
-
-    var iconHtml = (type === 'info') ? infoIcon : checkIcon;
-    toast.innerHTML = iconHtml + '<span>' + message + '</span>';
+    var indicatorHtml = '<span class="toast-indicator toast-indicator-' + (type === 'info' ? 'info' : 'success') + '" aria-hidden="true"></span>';
+    toast.innerHTML = indicatorHtml + '<span>' + message + '</span>';
 
     toastContainer.appendChild(toast);
 
@@ -286,7 +283,6 @@
     if (!resultsEl) return;
     resultsEl.innerHTML = 
       '<div class="empty-state-card">' +
-        '<svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
         '<h4 class="empty-state-title">Search Qualified Masterlist</h4>' +
         '<p class="empty-state-text">Enter at least 4 characters of your Last Name, First Name, or exact Student Number to verify qualification.</p>' +
       '</div>';
@@ -299,7 +295,6 @@
     if (!list.length) {
       resultsEl.innerHTML = 
         '<div class="no-results-card">' +
-          '<svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
           '<h4 class="empty-state-title">No Endorsed Record Found</h4>' +
           '<p class="empty-state-text">No matching records found for "<strong>' + escapeHtml(query) + '</strong>". Please check your spelling or contact the District Congressional Office if your application was recently submitted.</p>' +
         '</div>';
@@ -320,7 +315,7 @@
           '</div>' +
         '</div>' +
         '<span class="badge-qualified">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '<span class="badge-qualified-dot" aria-hidden="true"></span>' +
           '<span>Qualified</span>' +
         '</span>' +
       '</article>';
