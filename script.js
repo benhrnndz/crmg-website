@@ -81,11 +81,17 @@
             if (targetPageId === 'home') {
               animateAllCounters();
             }
+            if (typeof updateFabVisibility === 'function') {
+              updateFabVisibility();
+            }
           });
         });
       }, 180);
     } else {
       targetPanel.classList.add('active', 'visible');
+      if (typeof updateFabVisibility === 'function') {
+        updateFabVisibility();
+      }
     }
   }
 
@@ -201,6 +207,9 @@
     drawer.classList.add('active');
     if (overlay) overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+    if (typeof updateFabVisibility === 'function') {
+      updateFabVisibility();
+    }
 
     // Auto-focus search input with smooth delay
     setTimeout(function () {
@@ -217,6 +226,9 @@
     drawer.classList.remove('active');
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
+    if (typeof updateFabVisibility === 'function') {
+      updateFabVisibility();
+    }
 
     if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
       lastFocusedElement.focus();
@@ -525,6 +537,9 @@
         setTimeout(function () {
           introElement.classList.add('intro-hidden');
           introElement.classList.remove('intro-leaving');
+          if (typeof updateFabVisibility === 'function') {
+            updateFabVisibility();
+          }
         }, 750);
       };
 
@@ -555,5 +570,120 @@
       });
     }
   }
+
+  /* ──────────────────────────────────────────────
+     10. CONTEXTUAL FLOATING ACTION BUTTON (FAB)
+  ────────────────────────────────────────────── */
+  var fabLauncher = document.getElementById('fabLauncher');
+  var heroCheckerBtn = document.getElementById('heroOpenChecker');
+  var programsCheckerBtn = document.getElementById('programsOpenChecker');
+
+  function isElementInViewport(el) {
+    if (!el || !el.isConnected) return false;
+
+    // Check if element is inside an inactive view panel (which has display: none)
+    var panel = el.closest('.view-panel');
+    if (panel && !panel.classList.contains('active')) {
+      return false;
+    }
+
+    var rect = el.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return false;
+
+    var style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+      return false;
+    }
+
+    var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+    var windowWidth = window.innerWidth || document.documentElement.clientWidth;
+
+    // Visible if intersecting the viewport
+    return (
+      rect.bottom > 0 &&
+      rect.top < windowHeight &&
+      rect.right > 0 &&
+      rect.left < windowWidth
+    );
+  }
+
+  function showFab() {
+    if (!fabLauncher) return;
+    fabLauncher.classList.add('fab-visible');
+    fabLauncher.setAttribute('aria-hidden', 'false');
+    fabLauncher.removeAttribute('tabindex');
+  }
+
+  function hideFab() {
+    if (!fabLauncher) return;
+    fabLauncher.classList.remove('fab-visible');
+    fabLauncher.setAttribute('aria-hidden', 'true');
+    fabLauncher.setAttribute('tabindex', '-1');
+  }
+
+  function updateFabVisibility() {
+    if (!fabLauncher) return;
+
+    // Keep FAB hidden while the ceremonial intro is displaying
+    if (introElement && !introElement.classList.contains('intro-hidden') && !document.documentElement.classList.contains('intro-already-seen')) {
+      hideFab();
+      return;
+    }
+
+    // Keep FAB hidden while the scholarship drawer modal is open
+    if (drawer && drawer.classList.contains('active')) {
+      hideFab();
+      return;
+    }
+
+    // Lazily re-query buttons in case of dynamic DOM structure
+    if (!heroCheckerBtn) heroCheckerBtn = document.getElementById('heroOpenChecker');
+    if (!programsCheckerBtn) programsCheckerBtn = document.getElementById('programsOpenChecker');
+
+    var scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    var isScrolledDown = scrollY > 80;
+
+    var isHeroBtnVisible = isElementInViewport(heroCheckerBtn);
+    var isProgramsBtnVisible = isElementInViewport(programsCheckerBtn);
+
+    // Show FAB only when user has scrolled down AND neither button is visible in viewport
+    if (isScrolledDown && !isHeroBtnVisible && !isProgramsBtnVisible) {
+      showFab();
+    } else {
+      hideFab();
+    }
+  }
+
+  var fabTicking = false;
+  function requestFabUpdate() {
+    if (!fabTicking) {
+      fabTicking = true;
+      requestAnimationFrame(function () {
+        updateFabVisibility();
+        fabTicking = false;
+      });
+    }
+  }
+
+  window.addEventListener('scroll', requestFabUpdate, { passive: true });
+  window.addEventListener('resize', requestFabUpdate);
+  window.addEventListener('orientationchange', requestFabUpdate);
+  window.addEventListener('load', updateFabVisibility);
+  document.addEventListener('DOMContentLoaded', updateFabVisibility);
+
+  if ('IntersectionObserver' in window) {
+    var fabObserver = new IntersectionObserver(function () {
+      requestFabUpdate();
+    }, {
+      root: null,
+      threshold: [0, 0.25, 0.5, 0.75, 1.0]
+    });
+
+    if (heroCheckerBtn) fabObserver.observe(heroCheckerBtn);
+    if (programsCheckerBtn) fabObserver.observe(programsCheckerBtn);
+  }
+
+  // Initial visibility check
+  updateFabVisibility();
 
 })();
