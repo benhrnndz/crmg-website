@@ -1730,15 +1730,43 @@ html.intro-already-seen #executiveIntro {
   border-radius: 999px;
   padding: 12px 20px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition: all var(--transition-fast);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.92);
+  transition: opacity 280ms var(--spring-physics),
+              transform 280ms var(--spring-physics),
+              visibility 0s linear 280ms,
+              background-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  will-change: transform, opacity;
 }
-.fab-launcher:hover {
+
+.fab-launcher.fab-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  transition: opacity 280ms var(--spring-physics),
+              transform 280ms var(--spring-physics),
+              visibility 0s,
+              background-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.fab-launcher.fab-visible:hover {
   background-color: var(--civic-red-hover);
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-.fab-launcher:active {
+
+.fab-launcher.fab-visible:active {
   transform: scale(0.96);
+}
+
+.fab-launcher:focus-visible {
+  outline: 2px solid var(--civic-navy);
+  outline-offset: 3px;
 }
 
 .fab-inner {
