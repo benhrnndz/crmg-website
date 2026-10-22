@@ -116,21 +116,6 @@ Open `http://localhost:8000` in your browser.
 
 ---
 
-## 🌐 Deployment (GitHub Pages)
-
-The project is hosted and deployed via **GitHub Pages** from the `main` branch.
-
-To publish updates:
-```bash
-git add .
-git commit -m "feat: updates to website and documentation"
-git push origin main
-```
-
-Changes become live within 1 to 2 minutes.
-
----
-
 ## 📄 License & Attribution
 
 This portal and its contents are for the official public service of the **Office of Congressman Roy M. Gonzales, Lone District of Santa Rosa, Laguna**.
